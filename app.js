@@ -18,55 +18,60 @@ let TaxiModel = Backbone.Model.extend({
         this.set('fuel', this.get('fuel') - 1);
         this.set('score', this.get('score') + 1);
 
-        // just trying this out, calm down people who study my
-        // every decision on GitHub with these public repos
         if (this.get('taxiPosition')[0] === this.get('passPosition')[0]) {
             if (this.get('taxiPosition')[1] === this.get('passPosition')[1]) {
-                console.log('woop!');
+                this.set('fuel', this.get('fuel') + 10);
+                this.set('passPosition', [
+                    this.get('passPosition')[0] = Math.floor(Math.random() * 11),
+                    this.get('passPosition')[1] = Math.floor(Math.random() * 11),
+                ]);
             }
         }
+
+        if (this.get('fuel') === 0) {
+            console.log("Lose lose lose. Score: " + this.get('score'));
+        }
     },
-
-
 });
 
 // 2. Creating a view
 let TaxiView = Backbone.View.extend({
-    initialize: function() {        
+    initialize: function () {
         this.model.on('change', this.render, this);
     },
 
     events: {
+        'click #userBtn': 'begin',
         'click #up': 'update',
         'click #down': 'downdate',
         'click #left': 'leftdate',
         'click #right': 'rightdate',
     },
 
+    begin: function () {
+        this.model.move(Math.floor(Math.random() * 11), Math.floor(Math.random() * 11));
+    },
+
     update: function () {
         if (this.model.get('taxiPosition')[1] < 10) {
-            console.log("up");
             this.model.move(0, 1);
         }
     },
 
     downdate: function () {
         if (this.model.get('taxiPosition')[1] > 0) {
-            console.log("down");
             this.model.move(0, -1);
         }
     },
 
     leftdate: function () {
         if (this.model.get('taxiPosition')[0] > 0) {
-            console.log("left");
             this.model.move(-1, 0);
         }
     },
 
     rightdate: function () {
         if (this.model.get('taxiPosition')[0] < 10) {
-            console.log("right");
             this.model.move(1, 0);
         }
     },
@@ -81,7 +86,7 @@ let TaxiView = Backbone.View.extend({
 
 
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     let actualModel = new TaxiModel();
     let view = new TaxiView({
         el: document.querySelector('#kitAndCaboodle'),
