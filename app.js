@@ -4,10 +4,10 @@ let Backbone = require("backbone");
 let TaxiModel = Backbone.Model.extend({
     defaults: {
         username: "string",
-        fuel: 15,
+        fuel: 8,
         score: 0,
         taxiPosition: [0, 0],
-        passPosition: [0, 0],
+        passPosition: [Math.floor(Math.random() * 11), Math.floor(Math.random() * 11)],
     },
 
     move: function (x, y) {
@@ -17,7 +17,17 @@ let TaxiModel = Backbone.Model.extend({
         ]);
         this.set('fuel', this.get('fuel') - 1);
         this.set('score', this.get('score') + 1);
+
+        // just trying this out, calm down people who study my
+        // every decision on GitHub with these public repos
+        if (this.get('taxiPosition')[0] === this.get('passPosition')[0]) {
+            if (this.get('taxiPosition')[1] === this.get('passPosition')[1]) {
+                console.log('woop!');
+            }
+        }
     },
+
+
 });
 
 // 2. Creating a view
@@ -65,6 +75,7 @@ let TaxiView = Backbone.View.extend({
         document.querySelector('#taxiPosition').textContent = this.model.get('taxiPosition');
         document.querySelector('#fuelAmount').textContent = this.model.get('fuel');
         document.querySelector('#scoreBoard').textContent = this.model.get('score');
+        document.querySelector('#passPosition').textContent = this.model.get('passPosition');
     }
 });
 
