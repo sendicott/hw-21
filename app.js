@@ -34,8 +34,10 @@ let TaxiView = Backbone.View.extend({
     },
 
     update: function () {
-        console.log("up");
-        this.model.move(0, 1);
+        if (this.model.get('taxiPosition')[1] < 10) {
+            console.log("up");
+            this.model.move(0, 1);
+        }
     },
 
     downdate: function () {
@@ -53,8 +55,10 @@ let TaxiView = Backbone.View.extend({
     },
 
     rightdate: function () {
-        console.log("right");
-        this.model.move(1, 0);
+        if (this.model.get('taxiPosition')[0] < 10) {
+            console.log("right");
+            this.model.move(1, 0);
+        }
     },
 
     render: function () {
