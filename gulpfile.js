@@ -26,6 +26,6 @@ gulp.task('js', function () {
 gulp.task('watch', function () {
     // when index.html changes, run html task
     gulp.watch('index.html', ['html']);
-    gulp.watch('app.js', ['js']);
+    gulp.watch('*.js', ['js']);
     gulp.watch('style.scss', ['css']);
 });

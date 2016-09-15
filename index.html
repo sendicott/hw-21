@@ -9,11 +9,32 @@
 
 <body>
     <h1 id="header">Crazy Taxi Lite</h1>
-    <section id="kitAndCaboodle">
-        <section id="userSection">
+    <section id="startGame">
+        <section>
             <input type="text" id="nameOfUser" placeholder="Halt! Who goes there?">
-            <button id="userBtn">Abandon all hope, ye who drives a taxi</button>
         </section>
+        <section>
+            <label for="easyDiff">Easy</label>
+            <input type="radio" name="difficulty" id="easyDiff">
+
+            <label for="mediumDiff">Medium</label>
+            <input type="radio" name="difficulty" id="mediumDiff">
+
+            <label for="hardDiff">Hard</label>
+            <input type="radio" name="difficulty" id="hardDiff">
+        </section>
+        <section>
+            <label for="sedan">Volkswagen Jetta</label>
+            <input type="radio" name="car" id="sedan">
+
+            <label for="suv">Honda Pilot</label>
+            <input type="radio" name="car" id="suv">
+        </section>
+
+
+        <button id="userBtn">Start Your Engines!</button>
+    </section>
+    <section id="playGame">
         <section id="buttonSection">
             <button class="buttons" id="right">Right</button>
             <button class="buttons" id="left">Left</button> 
@@ -25,9 +46,10 @@
             <p id="fuelAmount"></p>
             <p id="scoreBoard"></p>
             <p id="passPosition"></p>
-        </section>
+        </section>       
     </section>
-
-
+    <section id="endGame">
+        <h1>Game Ended</h1>
+    </section>
 </body>
 </html>
