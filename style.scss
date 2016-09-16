@@ -2,6 +2,11 @@
     text-align: center;
 }
 
+#wordTaxi {
+    color: yellow;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
 #startGame {
     text-align: center;
     margin: 20px;
@@ -12,7 +17,41 @@
 }
 
 #nameOfUser {
-    display: inline-block;
+    display: block;
+    margin: 0 auto;
+}
+
+#currentUN {
+    display: block;
+    text-align: center;
+    margin: 15px auto;
+    width: 100%;
+    color: yellow;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#currentVehicle {
+    display: block;
+    text-align: center;
+    margin: 15px auto;
+    width: 100%;
+}
+
+#userBtn {
+    text-decoration: none;
+    color: black;
+    background-color: yellow;
+    border: 1px solid black;
+    text-align: center;
+    padding: 5px 15px;
+    font-weight: 800;
+    margin: 0 10px;
+    &:hover {
+        color: yellow;
+        background-color: black;
+        border: 1px solid yellow;
+        cursor: pointer;
+    }
 }
 
 #buttonSection {
@@ -47,4 +86,32 @@
 
 .hidden {
     display: none;
+}
+
+#finalUser {
+    display: block;
+    text-align: center;
+    margin: 15px auto;
+    width: 100%;
+    color: yellow;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#meanMessage {
+    display: block;
+    text-align: center;
+    margin: 15px auto;
+    width: 100%;
+    color: yellow;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#finalScore {
+    margin: 10px 0;
+    text-align: center;
+}
+
+#sadStitch {
+    text-align: center;
+    width: 100%;
 }

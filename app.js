@@ -5,9 +5,10 @@ let TaxiRouter = require('./router');
 let TaxiModel = Backbone.Model.extend({
     defaults: {
         username: "string",
+        vehicle: "string",
         fuel: 10,
-        score: 0,
         fuelCost: 1,
+        score: 0,
         moveGap: 1,     // set based on your car
         currentGap: 0,  // steps since you last picked someone up
         taxiPosition: [0, 0],
@@ -23,6 +24,7 @@ let TaxiModel = Backbone.Model.extend({
         this.set('fuel', this.get('fuel') - this.get('fuelCost'));
         this.set('score', this.get('score') + 1);
         this.set('currentGap', this.get('currentGap') + 1);
+        this.set('username', document.querySelector('#nameOfUser').value);
 
         if (this.get('taxiPosition')[0] === this.get('passPosition')[0]) {
             if (this.get('taxiPosition')[1] === this.get('passPosition')[1]) {
@@ -41,9 +43,7 @@ let TaxiModel = Backbone.Model.extend({
 
 
         if (this.get('fuel') <= 0) {
-            console.log("Lose lose lose. Score: " + this.get('score'));
-
-            // just trying
+            // console.log("Lose lose lose. Score: " + this.get('score'));
             this.trigger('finalScreen');
         }
     },
@@ -73,9 +73,11 @@ let startGame = Backbone.View.extend({
         if (document.querySelector('#sedan').checked) {
             this.model.set('fuelCost', 1);
             this.model.set('moveGap', 5);
+            this.model.set('vehicle', "Volkswagen Jetta");
         } else if (document.querySelector('#suv').checked) {
             this.model.set('fuelCost', 2);
             this.model.set('moveGap', 1);
+            this.model.set('vehicle', "Honda Pilot");
         }
 
         this.trigger('go');
@@ -90,16 +92,11 @@ let playGame = Backbone.View.extend({
     },
 
     events: {
-        // 'click #userBtn': 'begin',
         'click #up': 'update',
         'click #down': 'downdate',
         'click #left': 'leftdate',
         'click #right': 'rightdate',
     },
-
-    // begin: function () {
-    //     this.model.move(Math.floor(Math.random() * 11), Math.floor(Math.random() * 11));
-    // },
 
     update: function () {
         if (this.model.get('taxiPosition')[1] < 10) {
@@ -126,15 +123,27 @@ let playGame = Backbone.View.extend({
     },
 
     render: function () {
+        document.querySelector('#currentUN').textContent = this.model.get('username');
+        document.querySelector('#currentVehicle').textContent = "Vehicle: " + this.model.get('vehicle');
         document.querySelector('#taxiPosition').textContent = ("You are here: " + this.model.get('taxiPosition'));
         document.querySelector('#fuelAmount').textContent = ("Fuel left: " + this.model.get('fuel'));
         document.querySelector('#scoreBoard').textContent = ("Score: " + this.model.get('score'));
         document.querySelector('#passPosition').textContent = ("Next passenger: " + this.model.get('passPosition'));
-    }
+    },
 });
 
 let endGame = Backbone.View.extend({
+    initialize: function () {
+        this.render();
+        this.model.on('change', this.render, this);
+    },
 
+    events: {},
+
+    render: function() {
+        document.querySelector('#finalUser').textContent = this.model.get('username') + "...";
+        document.querySelector('#finalScore').textContent = ("FINAL SCORE: " + this.model.get('score'));
+    },
 });
 
 // adding a window event listener

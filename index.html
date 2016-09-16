@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <h1 id="header">Crazy Taxi Lite</h1>
+    <h1 id="header">Crazy <span id="wordTaxi">Taxi</span> Lite</h1>
     <section id="startGame">
         <section>
             <input type="text" id="nameOfUser" placeholder="Halt! Who goes there?">
@@ -35,6 +35,8 @@
         <button id="userBtn">Start Your Engines!</button>
     </section>
     <section id="playGame">
+        <h2 id="currentUN"></h2>
+        <h2 id="currentVehicle"></h2>
         <section id="buttonSection">
             <button class="buttons" id="right">Right</button>
             <button class="buttons" id="left">Left</button> 
@@ -49,7 +51,12 @@
         </section>       
     </section>
     <section id="endGame">
-        <h1>Game Ended</h1>
+        <h2 id="finalUser"></h2>
+        <h2 id="meanMessage">YOU LOSE</h2>
+        <section id="sadStitch">
+            <iframe src="http://giphy.com/embed/JER2en0ZRiGUE?html5=true" width="480" height="207" frameBorder="0" allowFullScreen></iframe>
+        </section>
+        <h3 id="finalScore"></h3>
     </section>
 </body>
 </html>
