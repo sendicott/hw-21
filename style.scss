@@ -1,5 +1,15 @@
+@import 'node_modules/foundation-sites/scss/foundation';
+
+@include foundation-global-styles;
+@include foundation-grid;
+
+body {
+    background-color: gray;
+}
+
 #header {
     text-align: center;
+    text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;
 }
 
 #wordTaxi {
@@ -13,12 +23,18 @@
 
     section {
         margin: 10px 0;
+
+        label {
+            color: white;
+            margin: 10px 5px;
+        }
     }
 }
 
 #nameOfUser {
     display: block;
     margin: 0 auto;
+    padding: 5px;
 }
 
 #currentUN {
@@ -84,6 +100,35 @@
     }
 }
 
+#grid {
+    width: 600px;
+    height: 400px;
+    background-color: white;
+    margin: 15px auto;
+}
+
+.row {
+    @include grid-row(10);
+    height: 40px;
+}
+
+.cell {
+    border: 1px solid black;
+    @include grid-column(1);
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.currentPass {
+    background-color: yellow;
+}
+
+.currentTaxi {
+    background-color: black;
+    color: white;
+}
+
 .hidden {
     display: none;
 }
@@ -114,4 +159,10 @@
 #sadStitch {
     text-align: center;
     width: 100%;
+}
+
+.carpic {
+    height: 125px;
+    width: 200px;
+    border: 2px solid black;
 }

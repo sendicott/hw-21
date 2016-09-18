@@ -6,6 +6,7 @@ module.exports = Backbone.Router.extend({
     },
 
     routes: {
+        '': 'startGame',
         'start': 'startGame',
         'play': 'playGame',
         'end': 'endGame',

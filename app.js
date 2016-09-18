@@ -1,18 +1,29 @@
 let Backbone = require("backbone");
 let TaxiRouter = require('./router');
 
+const GRID_SIZE = 10;
+
 // Writing the model
 let TaxiModel = Backbone.Model.extend({
     defaults: {
         username: "string",
         vehicle: "string",
-        fuel: 10,
+        fuel: 12,
         fuelCost: 1,
         score: 0,
         moveGap: 1,     // set based on your car
         currentGap: 0,  // steps since you last picked someone up
         taxiPosition: [0, 0],
-        passPosition: [Math.floor(Math.random() * 11), Math.floor(Math.random() * 11)],
+        passPosition: [Math.floor(Math.random() * GRID_SIZE), Math.floor(Math.random() * GRID_SIZE)],
+        highScores: [],
+    },
+
+    passCell: function() {
+        return this.get('passPosition')[1] * 10 + this.get('passPosition')[0];
+    },
+
+    taxiCell: function() {
+        return this.get('taxiPosition')[1] * 10 + this.get('taxiPosition')[0];
     },
 
     move: function (x, y) {
@@ -31,8 +42,8 @@ let TaxiModel = Backbone.Model.extend({
                 if (this.get('currentGap') >= this.get('moveGap')) {
                     this.set('fuel', this.get('fuel') + 10);
                     this.set('passPosition', [
-                        Math.floor(Math.random() * 11),
-                        Math.floor(Math.random() * 11),
+                        Math.floor(Math.random() * GRID_SIZE),
+                        Math.floor(Math.random() * GRID_SIZE),
                     ]);
                     console.log(this.get('currentGap'));
                     this.set('currentGap', 0);
@@ -41,10 +52,9 @@ let TaxiModel = Backbone.Model.extend({
             }
         }
 
-
         if (this.get('fuel') <= 0) {
-            // console.log("Lose lose lose. Score: " + this.get('score'));
             this.trigger('finalScreen');
+
         }
     },
 });
@@ -61,13 +71,13 @@ let startGame = Backbone.View.extend({
     },
 
     begin: function () {
-        this.model.move(Math.floor(Math.random() * 11), Math.floor(Math.random() * 11));
+        this.model.move(Math.floor(Math.random() * GRID_SIZE), Math.floor(Math.random() * GRID_SIZE));
         if (document.getElementById('easyDiff').checked) {
             this.model.set('fuel', this.model.get('fuel') + 11);
         } else if (document.getElementById('mediumDiff').checked) {
-            this.model.set('fuel', this.model.get('fuel') + 1);
+            this.model.set('fuel', this.model.get('fuel') + 6);
         } else if (document.getElementById('hardDiff').checked) {
-            this.model.set('fuel', this.model.get('fuel') - 4);
+            this.model.set('fuel', this.model.get('fuel') + 1);
         }
 
         if (document.querySelector('#sedan').checked) {
@@ -87,10 +97,23 @@ let startGame = Backbone.View.extend({
 // Creating the playGame view
 let playGame = Backbone.View.extend({
     initialize: function () {
-        this.render();
+        for (let i = 0; i < 10; i++) {
+            let row = document.createElement('div'); 
+            row.classList.add('row');
+            document.querySelector('#grid').appendChild(row);
+
+            for (let j = 0; j < 10; j++) {
+                let cell = document.createElement('div');
+                cell.classList.add('cell');
+                row.appendChild(cell);
+            }
+        }
+
         this.model.on('change', this.render, this);
+        this.render();
     },
 
+    // just switched up and down so it matches what it looks like on the screen, but numbers are now upside down
     events: {
         'click #up': 'update',
         'click #down': 'downdate',
@@ -98,13 +121,13 @@ let playGame = Backbone.View.extend({
         'click #right': 'rightdate',
     },
 
-    update: function () {
-        if (this.model.get('taxiPosition')[1] < 10) {
+    downdate: function () {
+        if (this.model.get('taxiPosition')[1] < 9) {
             this.model.move(0, 1);
         }
     },
 
-    downdate: function () {
+    update: function () {
         if (this.model.get('taxiPosition')[1] > 0) {
             this.model.move(0, -1);
         }
@@ -117,30 +140,48 @@ let playGame = Backbone.View.extend({
     },
 
     rightdate: function () {
-        if (this.model.get('taxiPosition')[0] < 10) {
+        if (this.model.get('taxiPosition')[0] < 9) {
             this.model.move(1, 0);
         }
     },
 
     render: function () {
+        let passenger = document.querySelector('.currentPass');
+        if (passenger !== null) {
+            passenger.classList.remove('currentPass');
+        }
+
+        let taxi = document.querySelector('.currentTaxi');
+        if (taxi !== null) {
+            taxi.classList.remove('currentTaxi');
+        }
+
+        let cells = document.querySelectorAll('.cell');
+        cells[this.model.passCell()].classList.add('currentPass');
+        cells[this.model.taxiCell()].classList.add('currentTaxi');
+
         document.querySelector('#currentUN').textContent = this.model.get('username');
         document.querySelector('#currentVehicle').textContent = "Vehicle: " + this.model.get('vehicle');
-        document.querySelector('#taxiPosition').textContent = ("You are here: " + this.model.get('taxiPosition'));
+        // document.querySelector('#taxiPosition').textContent = ("You are here: " + this.model.get('taxiPosition'));
         document.querySelector('#fuelAmount').textContent = ("Fuel left: " + this.model.get('fuel'));
         document.querySelector('#scoreBoard').textContent = ("Score: " + this.model.get('score'));
-        document.querySelector('#passPosition').textContent = ("Next passenger: " + this.model.get('passPosition'));
+        // document.querySelector('#passPosition').textContent = ("Next passenger: " + this.model.get('passPosition'));
     },
 });
 
 let endGame = Backbone.View.extend({
     initialize: function () {
+        // just trying to figure out where to put this (not sure it's the right code either)
+        this.model.set('highScores', this.model.get('highScores').push(this.model.get('score')));
+        console.log("High Score List: " + this.model.get('highScores'));
+
         this.render();
         this.model.on('change', this.render, this);
     },
 
     events: {},
 
-    render: function() {
+    render: function () {
         document.querySelector('#finalUser').textContent = this.model.get('username') + "...";
         document.querySelector('#finalScore').textContent = ("FINAL SCORE: " + this.model.get('score'));
     },
@@ -168,19 +209,18 @@ window.addEventListener('load', function () {
     let router = new TaxiRouter();
 
     startView.on('go', function () {
-        router.navigate('play', {trigger: true});
+        router.navigate('play', { trigger: true });
     });
 
     actualModel.on('finalScreen', function () {
         console.log("testingfinal");
-        router.navigate('end', {trigger: true});
+        router.navigate('end', { trigger: true });
     });
 
     router.on('route:startGame', function () {
         startView.el.classList.remove('hidden');
         playView.el.classList.add('hidden');
         endView.el.classList.add('hidden');
-        console.log('starting');
     });
 
     router.on('route:playGame', function () {
