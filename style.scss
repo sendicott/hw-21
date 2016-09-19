@@ -151,9 +151,20 @@ body {
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-#finalScore {
-    margin: 10px 0;
-    text-align: center;
+#endGame {
+    h3 {
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    ol {
+        margin: 10px 0;
+        text-align: center;
+
+        li {
+            text-align: center;
+        } 
+    }
 }
 
 #sadStitch {
@@ -165,4 +176,10 @@ body {
     height: 125px;
     width: 200px;
     border: 2px solid black;
+}
+
+#restart {
+    display: block;
+    text-align: center;
+    margin: 20px auto;
 }

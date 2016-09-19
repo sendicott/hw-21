@@ -1,9 +1,7 @@
 let Backbone = require("backbone");
 
 module.exports = Backbone.Router.extend({
-    initialize: function () {
-        console.log("checking");
-    },
+    // initialize: function () {},
 
     routes: {
         '': 'startGame',

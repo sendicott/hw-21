@@ -1,3 +1,14 @@
+/**
+ * I just added a reset function in the model, now I need to add
+ * a reset function that sets checks and inputs back to zero in 
+ * the start view. 
+ * 
+ * After that, I need to send the view back to the start view
+ * 
+ * After that, I need to run a for loop that displays each high score
+ * (ideally with its username) in an ordered list
+ */
+
 let Backbone = require("backbone");
 let TaxiRouter = require('./router');
 
@@ -5,10 +16,14 @@ const GRID_SIZE = 10;
 
 // Writing the model
 let TaxiModel = Backbone.Model.extend({
+    initialize: function () {
+        this.reset();
+    },
+
     defaults: {
         username: "string",
         vehicle: "string",
-        fuel: 12,
+        fuel: 0,
         fuelCost: 1,
         score: 0,
         moveGap: 1,     // set based on your car
@@ -54,8 +69,19 @@ let TaxiModel = Backbone.Model.extend({
 
         if (this.get('fuel') <= 0) {
             this.trigger('finalScreen');
-
         }
+    },
+
+    reset: function() {
+        this.set('username', "");
+        this.set('vehicle', "");
+        this.set('fuel', 10);
+        this.set('fuelCost', 1);
+        this.set('score', 0);
+        this.set('moveGap', 1);
+        this.set('currentGap', 0);
+        this.set('taxiPosition', [0, 0]);
+        this.set('passPosition', [Math.floor(Math.random() * GRID_SIZE), Math.floor(Math.random() * GRID_SIZE)]);
     },
 });
 
@@ -171,15 +197,17 @@ let playGame = Backbone.View.extend({
 
 let endGame = Backbone.View.extend({
     initialize: function () {
-        // just trying to figure out where to put this (not sure it's the right code either)
-        this.model.set('highScores', this.model.get('highScores').push(this.model.get('score')));
-        console.log("High Score List: " + this.model.get('highScores'));
-
         this.render();
         this.model.on('change', this.render, this);
     },
 
-    events: {},
+    events: {
+        'click #restart': 'startOver',
+    },
+
+    startOver: function () {
+        this.trigger('reset');
+    },
 
     render: function () {
         document.querySelector('#finalUser').textContent = this.model.get('username') + "...";
@@ -212,8 +240,25 @@ window.addEventListener('load', function () {
         router.navigate('play', { trigger: true });
     });
 
+    // When the endView triggers a 'reset' event
+    endView.on('reset', function () {
+        // Reset the model
+        startView.reset(); // we need to make this
+        actualModel.reset(); // we need to make this 
+
+        // Re-route to start
+        router.navigate('start', { trigger: true });
+    });
+
     actualModel.on('finalScreen', function () {
-        console.log("testingfinal");
+
+        let highscores = actualModel.get('highScores');
+        highscores.push(actualModel.get('score'));
+        actualModel.set('highScores', highscores);
+        console.log("High Score List: " + highscores);
+
+        document.querySelector('#highScoreList').innerHTML = ("<li>" + actualModel.get('username') + highscores + "</li>");
+
         router.navigate('end', { trigger: true });
     });
 
